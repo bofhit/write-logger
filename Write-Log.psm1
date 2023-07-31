@@ -4,13 +4,15 @@
 .DESCRIPTION
     Send log messages to console, file and/or syslog server. 
     * Different log levels can be specified for each destination. 
-    * Destination log levels default to -1, which turns logging off for that 
+    * Destination log levels default to -1, which disables logging for that 
         destination.
     * There a lot of parameters, so normally I would define a hash table 
         at the top of a script, and use parameter splatting.
 .EXAMPLE
-   Write-Log -LogMessage 'My message.' -LogLevel 6 -ConsoleLogLevel 7
+    # Call from console. Useful for testing.
+    Write-Log -LogMessage 'My message.' -LogLevel 6 -ConsoleLogLevel 7
 .EXAMPLE
+    # Use for script logging.
     # Top of the script.
     $logArgs = @{
         ConsoleLogLevel = 7     # Debug 
@@ -23,10 +25,11 @@
     }
     
     # Later in the script.
-    Write-Log -LogMessage 'My message' -LogLevel 5 $logArgs
+    Write-Log -LogMessage 'My info message' -LogLevel 6 $logArgs
+    
+    ...
 
-    # Yet later.
-    Write-Log -LogMessage 'My next message' -LogLevel 3 $logArgs
+    Write-Log -LogMessage 'My error message' -LogLevel 3 $logArgs
 
 .NOTES
     Depends on PoSH-Syslog to send syslog message.
@@ -91,7 +94,7 @@ Function Write-Log {
     # Assemble message.
     $timestamp = (Get-Date).ToString('yyyy-MM-ddTHH.mm.ss')
 
-    $message = "$timestamp [$($SEVERITY_KEYWORD_LUT[$LogSeverity])] $($LogMessage)"
+    $message = "$timestamp [$($SEVERITY_KEYWORD_LUT[$LogSeverity])]`t $($LogMessage)"
 
 # ============================================================================
     # Send message.
@@ -100,18 +103,21 @@ Function Write-Log {
     }
 
     if (($FileLogLevel -gt -1) -and ($FileLogLevel -ge $LogSeverity)){
-        Add-Content $message -Path
+        Add-Content $message -Path $LogFilePath
     }
 
     if (($SyslogLogLevel -gt -1) -and ($SyslogLogLevel -ge $LogSeverity)){
 
-        syslogArgs = @{
+        $syslogArgs = @{
+            Message = $message;
+            Severity = $LogSeverity;
             Server = $SyslogServer;
             Port = $SyslogPort;
-            Message = $message;
             Facility = $SyslogFacility
         }
 
         Send-SyslogMessage @syslogArgs
     }
 }
+
+Export-ModuleMember -Function Write-Log
