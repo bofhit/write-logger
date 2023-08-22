@@ -1,18 +1,18 @@
 # Write-Logger
 
-## .SYNOPSIS
+### .SYNOPSIS
     Send log messages to console, file, and/or syslog server.
-.DESCRIPTION
+### .DESCRIPTION
     Send log messages to console, file and/or syslog server.
     * Different log levels can be specified for each destination.
     * Destination log levels default to -1, which disables logging for that
         destination.
     * There a lot of parameters, so normally I would define a hash table
         at the top of a script, and use parameter splatting.
-.EXAMPLE
+### .EXAMPLE
     # Call from console. Useful for testing.
     Write-Logger -LogMessage 'My message.' -LogLevel 6 -ConsoleLogLevel 7
-.EXAMPLE
+### .EXAMPLE
     # Use for script logging.
     # Top of the script.
     $logArgs = @{
@@ -32,6 +32,5 @@
 
     Write-Logger -LogMessage 'My error message' -LogLevel 3 $logArgs
 
-.NOTES
+### .NOTES
     Depends on PoSH-Syslog to send syslog messages.
-#>
