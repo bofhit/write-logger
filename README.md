@@ -1,5 +1,5 @@
 Write-Logger
-
+<#
 .SYNOPSIS
     Send log messages to console, file, and/or syslog server.
 .DESCRIPTION
@@ -34,3 +34,4 @@ Write-Logger
 
 .NOTES
     Depends on PoSH-Syslog to send syslog messages.
+#>
