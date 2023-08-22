@@ -1,6 +1,6 @@
-Write-Logger
-<#
-.SYNOPSIS
+# Write-Logger
+
+## .SYNOPSIS
     Send log messages to console, file, and/or syslog server.
 .DESCRIPTION
     Send log messages to console, file and/or syslog server.
