@@ -10,7 +10,7 @@
         at the top of a script, and use parameter splatting.
 .EXAMPLE
     # Call from console. Useful for testing.
-    Write-Log -LogMessage 'My message.' -LogLevel 6 -ConsoleLogLevel 7
+    Write-Logger -LogMessage 'My message.' -LogLevel 6 -ConsoleLogLevel 7
 .EXAMPLE
     # Use for script logging.
     # Top of the script.
@@ -25,16 +25,16 @@
     }
     
     # Later in the script.
-    Write-Log -LogMessage 'My info message' -LogLevel 6 $logArgs
+    Write-Logger -LogMessage 'My info message' -LogLevel 6 $logArgs
     
     ...
 
-    Write-Log -LogMessage 'My error message' -LogLevel 3 $logArgs
+    Write-Logger -LogMessage 'My error message' -LogLevel 3 $logArgs
 
 .NOTES
     Depends on PoSH-Syslog to send syslog message.
 #>
-Function Write-Log {
+Function Write-Logger {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true,
@@ -99,6 +99,8 @@ Function Write-Log {
 # ============================================================================
     # Send message.
     if (($ConsoleLogLevel -gt -1) -and ($ConsoleLogLevel -ge $LogSeverity)){
+        $timestamp = (Get-Date).ToString('HH:mm:ss')
+        $message = "$timestamp [$($SEVERITY_KEYWORD_LUT[$LogSeverity])]$($LogMessage)"
         Write-Host $message
     }
 
@@ -120,4 +122,4 @@ Function Write-Log {
     }
 }
 
-Export-ModuleMember -Function Write-Log
+Export-ModuleMember -Function Write-Logger
