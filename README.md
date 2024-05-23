@@ -15,7 +15,7 @@
 ### .EXAMPLE
     # Use for script logging.
     # Top of the script.
-    $logArgs = @{
+    @logArgs = @{
         ConsoleLogLevel = 7     # Debug
         FileLogLevel = 6        # Info
         SyslogLevel = 4         # Warning
@@ -26,11 +26,11 @@
     }
 
     # Later in the script.
-    Write-Logger -LogMessage 'My info message' -LogLevel 6 $logArgs
+    Write-Logger -LogMessage 'My info message' -LogLevel 6 @logArgs
 
     ...
 
-    Write-Logger -LogMessage 'My error message' -LogLevel 3 $logArgs
+    Write-Logger -LogMessage 'My error message' -LogLevel 3 @logArgs
 
 ### .NOTES
     Depends on PoSH-Syslog to send syslog messages.
