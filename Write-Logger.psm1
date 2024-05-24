@@ -101,24 +101,20 @@ Function Write-Logger {
     }
 
 # ============================================================================
-    # Assemble message.
-    $timestamp = (Get-Date).ToString('yyyy-MM-ddTHH.mm.ss')
-
-    $message = "$timestamp [$($SEVERITY_KEYWORD_LUT[$LogSeverity])]`t $($LogMessage)"
-
-# ============================================================================
     # Send message.
+
+    $message = "[$($SEVERITY_KEYWORD_LUT[$LogSeverity])]`t $($LogMessage)"
 
     # To console.
     if (($ConsoleLogLevel -gt -1) -and ($ConsoleLogLevel -ge $LogSeverity)){
         $timestamp = (Get-Date).ToString('HH:mm:ss')
-        $message = "$timestamp [$($SEVERITY_KEYWORD_LUT[$LogSeverity])]$($LogMessage)"
-        Write-Host $message
+        Write-Host "$timestamp $message"
     }
 
     # To file.
     if (($FileLogLevel -gt -1) -and ($FileLogLevel -ge $LogSeverity)){
-        Add-Content $message -Path $LogFilePath
+        $timestamp = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss')
+        Add-Content "$timestamp $message" -Path $LogFilePath
     }
 
     # To syslog server.
