@@ -35,8 +35,6 @@
     Depends on PoSH-Syslog to send syslog messages.
 #>
 
-# TODO: Add max file size for log file.
-
 # ============================================================================
 # Check for depedency.
 if (-not (Get-Module -ListAvailable -Name Posh-SYSLOG)) {
@@ -86,7 +84,11 @@ Function Write-Logger {
         [ValidateRange(0, 23)]
         [Parameter(Mandatory=$false,
             HelpMessage='Syslog facility number'
-            )][Int32]$SyslogFacility
+            )][Int32]$SyslogFacility,
+
+        [Parameter(Mandatory=$false,
+            HelpMessage='Log file max lines'
+            )][Int32]$LogFileMaxLines=10000
     )
 
     $SEVERITY_KEYWORD_LUT = @{
@@ -115,6 +117,9 @@ Function Write-Logger {
     if (($FileLogLevel -gt -1) -and ($FileLogLevel -ge $LogSeverity)){
         $timestamp = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss')
         Add-Content "$timestamp $message" -Path $LogFilePath
+
+        $rows = Get-Content $LogFilePath
+        Set-Content -Value $rows[-$($LogFileMaxLines).. -1] -Path $LogFilePath
     }
 
     # To syslog server.
