@@ -25,11 +25,11 @@
     }
 
     # Later in the script.
-    Write-Logger -LogMessage 'My info message' -LogLevel 6 $logArgs
+    Write-Logger -LogMessage 'My info message' -LogLevel 6 @logArgs
 
     ...
 
-    Write-Logger -LogMessage 'My error message' -LogLevel 3 $logArgs
+    Write-Logger -LogMessage 'My error message' -LogLevel 3 @logArgs
 
 .NOTES
     Depends on PoSH-Syslog to send syslog messages.
