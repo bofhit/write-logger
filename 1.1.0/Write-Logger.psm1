@@ -46,6 +46,10 @@ Function Write-Logger {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true,
+            HelpMessage='Logger name.'
+            )][string]$LoggerName,
+
+        [Parameter(Mandatory=$true,
             HelpMessage='Log message.'
             )][string]$LogMessage,
 
@@ -106,6 +110,7 @@ Function Write-Logger {
     # Send message.
 
     $message = "[$($SEVERITY_KEYWORD_LUT[$LogSeverity])]`t $($LogMessage)"
+    $messageWithLoggerName = "[$($SEVERITY_KEYWORD_LUT[$LogSeverity])]`t [$($LoggerName)] $($LogMessage)"
 
     # To console.
     if (($ConsoleLogLevel -gt -1) -and ($ConsoleLogLevel -ge $LogSeverity)){
@@ -126,7 +131,7 @@ Function Write-Logger {
     if (($SyslogLogLevel -gt -1) -and ($SyslogLogLevel -ge $LogSeverity)){
 
         $syslogArgs = @{
-            Message = $message;
+            Message = $messageWithLoggerName;
             Severity = $LogSeverity;
             Server = $SyslogServer;
             Port = $SyslogPort;
