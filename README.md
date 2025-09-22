@@ -37,5 +37,6 @@
 
 ## Versions
 1.0.0- Initial version.
-1.1.0- Added convenience functions, logger name.
+1.1.0- Added logger name.
+
 
