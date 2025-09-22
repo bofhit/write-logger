@@ -15,6 +15,7 @@
     # Use for script logging.
     # Top of the script.
     $logArgs = @{
+        LoggerName = 'My-Script'
         ConsoleLogLevel = 7     # Debug
         FileLogLevel = 6        # Info
         SyslogLevel = 4         # Warning
@@ -40,6 +41,90 @@
 if (-not (Get-Module -ListAvailable -Name Posh-SYSLOG)) {
     Write-Host 'Please install the Posh-SYSLOG module.'
     Exit-PSHostProcess
+}
+
+# ============================================================================
+# Convenience functions.
+# Impelmented for levels I use most.
+
+Function Log-Debug{
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$true,
+            HelpMessage='Log message.'
+            )][string]$LogMessage,
+        
+        [Parameter(Mandatory=$true,
+            HelpMessage='Dictionary of logger arguments.'
+            )][hashtable]$LogArgs
+    )
+
+    Write-Logger -LogMessage $LogMessage 7 $LogSeverity @LogArgs
+}
+
+Function Log-Info {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$true,
+            HelpMessage='Log message.'
+            )][string]$LogMessage,
+        
+        [Parameter(Mandatory=$true,
+            HelpMessage='Dictionary of logger arguments.'
+            )][hashtable]$LogArgs
+    )
+
+    Write-Logger -LogMessage $LogMessage 6 $LogSeverity @LogArgs
+}
+
+Function Log-Warning {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$true,
+            HelpMessage='Log message.'
+            )][string]$LogMessage,
+        
+        [Parameter(Mandatory=$true,
+            HelpMessage='Dictionary of logger arguments.'
+            )][hashtable]$LogArgs
+    )
+
+    Write-Logger -LogMessage $LogMessage 4 $LogSeverity @LogArgs
+}
+
+Function Log-Error {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$true,
+            HelpMessage='Log message.'
+            )][string]$LogMessage,
+        
+        [Parameter(Mandatory=$true,
+            HelpMessage='Dictionary of logger arguments.'
+            )][hashtable]$LogArgs
+    )
+
+    Write-Logger -LogMessage $LogMessage 3 $LogSeverity @LogArgs
+}
+
+Function Log-CatchError {
+    <#
+    Similar to the other convenience functions, except it sends the last 
+    PowerShell error in addition to the message passed as an argument.
+    #>
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$true,
+            HelpMessage='Log message.'
+            )][string]$LogMessage,
+        
+        [Parameter(Mandatory=$true,
+            HelpMessage='Dictionary of logger arguments.'
+            )][hashtable]$LogArgs
+    )
+
+    Write-Logger -LogMessage $LogMessage 3 $LogSeverity @LogArgs
+    Write-Logger -LogMessage $Error[-1] 3 $LogSeverity @LogArgs
 }
 
 Function Write-Logger {
@@ -142,4 +227,5 @@ Function Write-Logger {
     }
 }
 
-Export-ModuleMember -Function Write-Logger
+Export-ModuleMember -Function *
+
