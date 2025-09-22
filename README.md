@@ -1,4 +1,4 @@
-# Write-Logger
+## Write-Logger
 
 ### .SYNOPSIS
     Send log messages to console, file, and/or syslog server.
@@ -34,3 +34,8 @@
 
 ### .NOTES
     Depends on PoSH-Syslog to send syslog messages.
+
+## Versions
+1.0.0- Initial version.
+1.1.0- Added convenience functions, logger name.
+
