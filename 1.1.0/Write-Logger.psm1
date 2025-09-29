@@ -160,20 +160,20 @@ Function Write-Logger {
 
         [Parameter(Mandatory=$false,
             HelpMessage='Log file path.'
-            )][string]$LogFilePath,
+            )][string]'C:\Windows\Temp',
 
         [Parameter(Mandatory=$false,
             HelpMessage='Syslog server host.'
-            )][string]$SyslogServer,
+            )][string]'localhost',
 
         [Parameter(Mandatory=$false,
             HelpMessage='Syslog server port.'
-            )][Int32]$SyslogPort,
+            )][Int32]514,
 
         [ValidateRange(0, 23)]
         [Parameter(Mandatory=$false,
             HelpMessage='Syslog facility number'
-            )][Int32]$SyslogFacility,
+            )][Int32]5,
 
         [Parameter(Mandatory=$false,
             HelpMessage='Log file max lines'
