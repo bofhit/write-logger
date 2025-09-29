@@ -47,7 +47,7 @@ if (-not (Get-Module -ListAvailable -Name Posh-SYSLOG)) {
 # Convenience functions.
 # Impelmented for levels I use most.
 
-Function Log-Debug{
+Function Write-LogDebug{
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true,
@@ -62,7 +62,7 @@ Function Log-Debug{
     Write-Logger -LogMessage $LogMessage 7 $LogSeverity @LogArgs
 }
 
-Function Log-Info {
+Function Write-LogInfo {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true,
@@ -77,7 +77,7 @@ Function Log-Info {
     Write-Logger -LogMessage $LogMessage 6 $LogSeverity @LogArgs
 }
 
-Function Log-Warning {
+Function Write-LogWarning {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true,
@@ -92,7 +92,7 @@ Function Log-Warning {
     Write-Logger -LogMessage $LogMessage 4 $LogSeverity @LogArgs
 }
 
-Function Log-Error {
+Function Write-LogError {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true,
@@ -107,7 +107,7 @@ Function Log-Error {
     Write-Logger -LogMessage $LogMessage 3 $LogSeverity @LogArgs
 }
 
-Function Log-CatchError {
+Function Write-LogCatchError {
     <#
     Similar to the other convenience functions, except it sends the last 
     PowerShell error in addition to the message passed as an argument.
