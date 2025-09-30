@@ -52,5 +52,10 @@ InModuleScope $script:ModuleName {
             {Write-Logger $logArgs | Should Throw 'LogSeverity cannot be null or empty.'}
         }
     }    
+
+#TODO: Test writing to console.
+#TODO: Test writing to file.
+#TODO: Test writing to syslog.
+
 }
 
