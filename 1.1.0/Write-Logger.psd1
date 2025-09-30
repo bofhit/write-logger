@@ -70,11 +70,11 @@ Copyright = '(c) tim.burkholder. All rights reserved.'
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
-    'Log-Debug'
-    'Log-Info'
-    'Log-Warning'
-    'Log-Error'
-    'Log-CatchError'
+    'Write-LogDebug'
+    'Write-LogInfo'
+    'Write-LogWarning'
+    'Write-LogError'
+    'Write-LogCatchError'
     'Write-Logger'
 )
 
