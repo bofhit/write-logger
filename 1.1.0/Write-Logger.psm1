@@ -59,7 +59,7 @@ Function Write-LogDebug{
             )][hashtable]$LogArgs
     )
 
-    Write-Logger -LogMessage $LogMessage 7 $LogSeverity @LogArgs
+    Write-Logger -LogMessage $LogMessage -LogSeverity 7 @LogArgs
 }
 
 Function Write-LogInfo {
@@ -74,7 +74,7 @@ Function Write-LogInfo {
             )][hashtable]$LogArgs
     )
 
-    Write-Logger -LogMessage $LogMessage 6 $LogSeverity @LogArgs
+    Write-Logger -LogMessage $LogMessage -LogSeverity 6 @LogArgs
 }
 
 Function Write-LogWarning {
@@ -89,7 +89,7 @@ Function Write-LogWarning {
             )][hashtable]$LogArgs
     )
 
-    Write-Logger -LogMessage $LogMessage 4 $LogSeverity @LogArgs
+    Write-Logger -LogMessage $LogMessage -LogSeverity 4 @LogArgs
 }
 
 Function Write-LogError {
@@ -104,7 +104,7 @@ Function Write-LogError {
             )][hashtable]$LogArgs
     )
 
-    Write-Logger -LogMessage $LogMessage 3 $LogSeverity @LogArgs
+    Write-Logger -LogMessage $LogMessage -LogSeverity 3 @LogArgs
 }
 
 Function Write-LogCatchError {
@@ -123,10 +123,9 @@ Function Write-LogCatchError {
             )][hashtable]$LogArgs
     )
 
-    Write-Logger -LogMessage $LogMessage 3 $LogSeverity @LogArgs
-    Write-Logger -LogMessage $Error[-1] 3 $LogSeverity @LogArgs
+    Write-Logger -LogMessage $LogMessage -LogSeverity 3 @LogArgs
+    Write-Logger -LogMessage $Error[-1] -LogSeverity 3 @LogArgs
 }
-
 Function Write-Logger {
     [CmdletBinding()]
     Param(
