@@ -38,4 +38,5 @@
 ## Versions
 1.0.0- Initial version.
 1.1.0- Added logger name param, convenience functions.
+1.1.1- Added message format strings.
 
