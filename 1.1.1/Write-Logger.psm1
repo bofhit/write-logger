@@ -124,7 +124,11 @@ Function Write-LogCatchError {
     )
 
     Write-Logger -LogMessage $LogMessage -LogSeverity 3 @LogArgs
-    Write-Logger -LogMessage $Error[-1] -LogSeverity 3 @LogArgs
+    try{
+        Write-Logger -LogMessage $Error[-1] -LogSeverity 3 @LogArgs
+    }catch{
+        Write-Logger -LogMessage "$($error) variable not available."
+    }
 }
 Function Write-Logger {
     [CmdletBinding()]
