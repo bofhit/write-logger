@@ -51,6 +51,26 @@ InModuleScope $script:ModuleName {
             $logArgs.Remove('LogSeverity')
             {Write-Logger $logArgs | Should Throw 'LogSeverity cannot be null or empty.'}
         }
+
+        It 'Should work with a console message format provided.' {
+            $logArgs['ConsoleMessageFormat'] = "[$level]-$message"
+            {Write-Logger $logArgs | Should Not Throw }
+        }
+
+        It 'Should work with a file message format provided.' {
+            $logArgs['FileMessageFormat'] = "[$level]-$message"
+            {Write-Logger $logArgs | Should Not Throw }
+        }
+
+        It 'Should work with a syslog message format provided.' {
+            $logArgs['SyslogMessageFormat'] = "[$level]-$message"
+            {Write-Logger $logArgs | Should Not Throw }
+        }
+
+        It 'Should not work with an invalid type for the syslog message format provided.' {
+            $logArgs['SyslogMessageFormat'] = 2
+            {Write-Logger $logArgs | Should Not Throw }
+        }
     }    
 
 #TODO: Test writing to console.

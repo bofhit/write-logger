@@ -44,6 +44,35 @@ if (-not (Get-Module -ListAvailable -Name Posh-SYSLOG)) {
 }
 
 # ============================================================================
+# Script functions
+
+Function Format-Message{
+    # Replace keywords in message.
+    # Keywords are prefixed with "%".
+    # So far I have:
+    # timestamp
+    # level
+    # message
+
+    Param (
+             [string]$formatString
+    )
+
+    if ($formatString.Contains('%timestamp')) {
+        $formatString = $formatString.Replace('%timestamp', $timestamp)
+    }
+
+    if ($formatString.Contains('%level')) {
+        $formatString = $formatString.Replace('%level', $level)
+    }
+
+    if ($formatString.Contains('%message')) {
+        $formatString = $formatString.Replace('%message', $logMessage)
+    }
+
+    return $formatString
+}
+
 # Convenience functions.
 # Impelmented for levels I use most.
 
@@ -151,15 +180,27 @@ Function Write-Logger {
             HelpMessage='Console log level.'
             )][string]$ConsoleLogLevel = -1,
 
+        [Parameter(Mandatory=$false,
+            HelpMessage='Console message format string.'
+            )][string]$ConsoleMessageFormat = '%timestamp- [%level]- %message',
+
         [ValidateRange(-1, 7)]
         [Parameter(Mandatory=$false,
             HelpMessage='File log level.'
             )][string]$FileLogLevel = -1,
 
+        [Parameter(Mandatory=$false,
+            HelpMessage='File message format string.'
+            )][string]$FileMessageFormat = '%timestamp- [%level]- %message',
+
         [ValidateRange(-1, 7)]
         [Parameter(Mandatory=$false,
             HelpMessage='Syslog log level.'
             )][string]$SyslogLogLevel = -1,
+
+        [Parameter(Mandatory=$false,
+            HelpMessage='Syslog message format string.'
+            )][string]$SyslogMessageFormat = '%timestamp- [%level]- %message',
 
         [Parameter(Mandatory=$false,
             HelpMessage='Log file path.'
@@ -196,30 +237,32 @@ Function Write-Logger {
 
 # ============================================================================
     # Send message.
-
-    $message = "[$($SEVERITY_KEYWORD_LUT[$LogSeverity])]`t $($LogMessage)"
-    $messageWithLoggerName = "[$($SEVERITY_KEYWORD_LUT[$LogSeverity])]`t [$($LoggerName)] $($LogMessage)"
+    $timestamp = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss')   
 
     # To console.
     if (($ConsoleLogLevel -gt -1) -and ($ConsoleLogLevel -ge $LogSeverity)){
-        $timestamp = (Get-Date).ToString('HH:mm:ss')
-        Write-Host "$timestamp $message"
+        $level = $SEVERITY_KEYWORD_LUT[$LogSeverity]
+        $formattedMessage = Format-Message $ConsoleMessageFormat
+        Write-Host $formattedMessage
     }
 
     # To file.
     if (($FileLogLevel -gt -1) -and ($FileLogLevel -ge $LogSeverity)){
-        $timestamp = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss')
-        Add-Content "$timestamp $message" -Path $LogFilePath
+        $level = $SEVERITY_KEYWORD_LUT[$LogSeverity]
+        $formattedMessage = Format-Message $FileMessageFormat
+        Add-Content $formattedMessage -Path $LogFilePath
 
+        # Manage log file size.
         $rows = Get-Content $LogFilePath
         Set-Content -Value $rows[-$($LogFileMaxLines).. -1] -Path $LogFilePath
     }
 
     # To syslog server.
     if (($SyslogLogLevel -gt -1) -and ($SyslogLogLevel -ge $LogSeverity)){
-
+        $level = $SEVERITY_KEYWORD_LUT[$LogSeverity]
+        $formattedMessage = Format-Message $FileMessageFormat
         $syslogArgs = @{
-            Message = $messageWithLoggerName;
+            Message = $formattedMessage;
             Severity = $LogSeverity;
             Server = $SyslogServer;
             Port = $SyslogPort;
