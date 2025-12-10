@@ -260,7 +260,7 @@ Function Write-Logger {
     # To syslog server.
     if (($SyslogLogLevel -gt -1) -and ($SyslogLogLevel -ge $LogSeverity)){
         $level = $SEVERITY_KEYWORD_LUT[$LogSeverity]
-        $formattedMessage = Format-Message $FileMessageFormat
+        $formattedMessage = Format-Message $SyslogMessageFormat
         $syslogArgs = @{
             Message = $formattedMessage;
             Severity = $LogSeverity;
