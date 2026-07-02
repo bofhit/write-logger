@@ -1,41 +1,26 @@
-## Write-Logger
+# write-logger
 
-### .SYNOPSIS
-    Send log messages to console, file, and/or syslog server.
-### .DESCRIPTION
-    Send log messages to console, file and/or syslog server.
-    * Different log levels can be specified for each destination.
-    * Destination log levels default to -1, which disables logging for that
-        destination.
-    * There a lot of parameters, so normally I would define a hash table
-        at the top of a script, and use parameter splatting.
-### .EXAMPLE
-    # Call from console. Useful for testing.
-    Write-Logger -LogMessage 'My message.' -LogLevel 6 -ConsoleLogLevel 7
-### .EXAMPLE
-    # Use for script logging.
-    # Top of the script.
-    @logArgs = @{
-        ConsoleLogLevel = 7     # Debug
-        FileLogLevel = 6        # Info
-        SyslogLevel = 4         # Warning
-        LogFilePath = 'mypath.log'
-        SyslogServer = 'server.host'
-        SyslogPort = 514
-        SyslogFacility = 10
-    }
+## Purpose
+A PowerShell module (`Write-Logger`) providing the same multi-destination logging concept as `ivy`/`logger`, but for PowerShell scripts: send log messages to console, file, and/or a syslog server, each with independently configurable severity thresholds (syslog levels 0-7, RFC 5424 style).
 
-    # Later in the script.
-    Write-Logger -LogMessage 'My info message' -LogLevel 6 @logArgs
+## Language / Stack
+PowerShell module (`.psm1`/`.psd1`). Depends on the **Posh-SYSLOG** PowerShell module for syslog delivery (`Send-SyslogMessage`); the module checks for and refuses to load without it.
 
-    ...
+## Structure
+Two published versions side by side:
+- `1.0.0/Write-Logger.psd1` + `.psm1`
+- `1.1.0/Write-Logger.psm1` + `.psd1`, plus `1.1.0/tests/Unit.Tests.ps1` (Pester tests)
 
-    Write-Logger -LogMessage 'My error message' -LogLevel 3 @logArgs
+1.1.0 adds a `LoggerName` parameter and convenience wrapper functions (`Write-LogDebug`, `Write-LogInfo`, `Write-LogWarning`, `Write-LogError`, `Write-LogCatchError`).
 
-### .NOTES
-    Depends on PoSH-Syslog to send syslog messages.
+## Usage
+Typical pattern: define a `$logArgs` hashtable (console/file/syslog levels, log file path, syslog server/port/facility) once at the top of a script, then call `Write-Logger -LogMessage '...' -LogLevel N @logArgs` (or the convenience functions) throughout. Destination levels default to `-1`, which disables that destination.
 
-## Versions
-1.0.0- Initial version.
-1.1.0- Added logger name param, convenience functions.
+## Setup notes
+Requires `Posh-SYSLOG` installed (`Get-Module -ListAvailable -Name Posh-SYSLOG` check at module load). No other dependencies.
 
+## Security/quality flags
+- No secrets found.
+- Versioned releases with a real README and Pester unit tests — this is one of the more mature/polished repos in the set.
+- Actively maintained: last commit 2025-09-30.
+- This is the PowerShell counterpart to `ivy` (Python) — together they appear to be BoH's standard logging approach across both stacks.
